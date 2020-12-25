@@ -21,4 +21,9 @@ class Date extends Filter implements Searchable
     {
         return $query->whereDate("{$model->getTable()}.{$this->id()}", '=', $this->value());
     }
+
+    public function renderWith(): array
+    {
+        return [];
+    }
 }

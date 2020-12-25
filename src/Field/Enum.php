@@ -5,9 +5,13 @@ namespace Terranet\Administrator\Field;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Terranet\Administrator\Exception;
+use Terranet\Administrator\Field\Traits\IsArray;
+use Terranet\Administrator\Traits\Form\SupportsTypes;
 
 class Enum extends Field
 {
+    use IsArray, SupportsTypes;
+
     /** @var array */
     protected $options = [];
 
@@ -23,7 +27,7 @@ class Enum extends Field
     /**
      * @return $this
      */
-    public function disableColors()
+    public function disableColors(): self
     {
         $this->useColors = false;
 
@@ -31,7 +35,7 @@ class Enum extends Field
     }
 
     /**
-     * @param  iterable  $options
+     * @param iterable $options
      * @return self
      */
     public function setOptions(iterable $options): self
@@ -55,8 +59,8 @@ class Enum extends Field
     /**
      * Set colors palette.
      *
-     * @param  mixed  $color
-     * @param  null|string  $value
+     * @param mixed $color
+     * @param null|string $value
      * @return Enum
      * @throws Exception
      */
@@ -82,20 +86,22 @@ class Enum extends Field
     /**
      * @return array
      */
-    protected function onEdit()
+    protected function onIndex()
     {
-        return [
-            'options' => $this->options ?: [],
-            'color' => $this->useColors && $this->value() ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
-        ];
+        return $this->onEdit();
     }
 
     /**
      * @return array
      */
-    protected function onIndex()
+    protected function onEdit()
     {
-        return $this->onEdit();
+        return [
+            'type' => $this->type,
+            'options' => $this->options ?: [],
+            'multiple' => $this->isArray,
+            'color' => $this->useColors && $this->value() ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
+        ];
     }
 
     /**

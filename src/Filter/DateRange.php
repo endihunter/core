@@ -28,4 +28,9 @@ class DateRange extends Filter implements Searchable
 
         return $query;
     }
+
+    public function renderWith(): array
+    {
+        return [];
+    }
 }
